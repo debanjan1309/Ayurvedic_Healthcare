@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthcare Symptom Prediction</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <a href="/">
+                    <img src="static/image/icon1.png" alt="Your Logo">
+                </a>
+            </div>
+            <nav class="main-navigation">
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/symptoms">Check Symptoms</a></li>
+                    <li><a href="/disease">Check Disease</a></li>
+                    <li><a href="/bloodbank">Check Bloodbank</a></li>
+                    <li><a href="/about">About Us</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <h2>Enter Symptoms</h2>
+        <form method="POST" action="/predict">
+            <label for="symptom1">Symptom 1:</label>
+            <input type="text" id="symptom1" name="symptom1" oninput="showSuggestions('symptom1', 'suggestion-box-1')">
+            <div id="suggestion-box-1" class="suggestion-box"></div><br>
+
+            <label for="symptom2">Symptom 2:</label>
+            <input type="text" id="symptom2" name="symptom2" oninput="showSuggestions('symptom2', 'suggestion-box-2')">
+            <div id="suggestion-box-2" class="suggestion-box"></div><br>
+
+            <label for="symptom3">Symptom 3:</label>
+            <input type="text" id="symptom3" name="symptom3" oninput="showSuggestions('symptom3', 'suggestion-box-3')">
+            <div id="suggestion-box-3" class="suggestion-box"></div><br>
+
+            <label for="symptom4">Symptom 4:</label>
+            <input type="text" id="symptom4" name="symptom4" oninput="showSuggestions('symptom4', 'suggestion-box-4')">
+            <div id="suggestion-box-4" class="suggestion-box"></div><br>
+
+            <label for="symptom5">Symptom 5:</label>
+            <input type="text" id="symptom5" name="symptom5" oninput="showSuggestions('symptom5', 'suggestion-box-5')">
+            <div id="suggestion-box-5" class="suggestion-box"></div><br>
+
+            <div style="display: flex; justify-content: center;">
+                <button type="submit">Predict Disease</button>
+            </div>
+        </form>
+    </main>
+    <!-- JavaScript for suggestion box -->
+<script>
+    // Sample list of suggestions (you can replace this with your own data)
+    const suggestions = ["itching","skin_rash","nodal_skin_eruptions","continuous_sneezing","shivering","chills","joint_pain",
+        "stomach_pain","acidity","ulcers_on_tongue","muscle_wasting","vomiting","burning_micturition","spotting_ urination","fatigue",
+        "weight_gain","anxiety","cold_hands_and_feets","mood_swings","weight_loss","restlessness","lethargy","patches_in_throat",
+        "irregular_sugar_level","cough","high_fever","sunken_eyes","breathlessness","sweating","dehydration","indigestion",
+        "headache","yellowish_skin","dark_urine","nausea","loss_of_appetite","pain_behind_the_eyes","back_pain","constipation",
+        "abdominal_pain","diarrhoea","mild_fever","yellow_urine","yellowing_of_eyes","acute_liver_failure","fluid_overload",
+        "swelling_of_stomach","swelled_lymph_nodes","malaise","blurred_and_distorted_vision","phlegm","throat_irritation",
+        "redness_of_eyes","sinus_pressure","runny_nose","congestion","chest_pain","weakness_in_limbs","fast_heart_rate",
+        "pain_during_bowel_movements","pain_in_anal_region","bloody_stool","irritation_in_anus","neck_pain","dizziness","cramps",
+        "bruising","obesity","swollen_legs","swollen_blood_vessels","puffy_face_and_eyes","enlarged_thyroid","brittle_nails",
+        "swollen_extremeties","excessive_hunger","extra_marital_contacts","drying_and_tingling_lips","slurred_speech","knee_pain","hip_joint_pain",
+        "muscle_weakness","stiff_neck","swelling_joints","movement_stiffness","spinning_movements","loss_of_balance","unsteadiness","weakness_of_one_body_side",
+        "loss_of_smell","bladder_discomfort","foul_smell_of urine","continuous_feel_of_urine","passage_of_gases","internal_itching","toxic_look_(typhos)",
+        "depression","irritability","muscle_pain","altered_sensorium","red_spots_over_body","belly_pain","abnormal_menstruation","dischromic _patches",
+        "watering_from_eyes","increased_appetite","polyuria","family_history","mucoid_sputum","rusty_sputum","lack_of_concentration","visual_disturbances",
+        "receiving_blood_transfusion","receiving_unsterile_injections","coma","stomach_bleeding","distention_of_abdomen","history_of_alcohol_consumption",
+        "fluid_overload","blood_in_sputum","prominent_veins_on_calf","palpitations","painful_walking","pus_filled_pimples","blackheads","scurring","skin_peeling",
+        "silver_like_dusting","small_dents_in_nails","inflammatory_nails","blister","red_sore_around_nose","yellow_crust_ooze"];
+
+    function showSuggestions(inputId, suggestionBoxId) {
+        const input = document.getElementById(inputId);
+        const suggestionBox = document.getElementById(suggestionBoxId);
+        
+        // Clear previous suggestions
+        suggestionBox.innerHTML = "";
+        
+        // Get user input and filter suggestions based on it
+        const userInput = input.value.toLowerCase();
+        const filteredSuggestions = suggestions.filter(suggestion => suggestion.toLowerCase().includes(userInput));
+        
+        // Display filtered suggestions
+        filteredSuggestions.forEach(suggestion => {
+            const suggestionItem = document.createElement("div");
+            suggestionItem.textContent = suggestion;
+            suggestionItem.classList.add("suggestion");
+            
+            // Handle click on a suggestion item
+            suggestionItem.addEventListener("click", () => {
+                input.value = suggestion;
+                suggestionBox.innerHTML = ""; // Clear suggestions after selection
+            });
+            
+            suggestionBox.appendChild(suggestionItem);
+        });
+    }
+</script>
+</body>
+<footer>
+    <div class="footer-content">
+        <div class="footer-links">
+            <ul>
+                <a href="/">Home</a>
+                <a href="/symptoms">Check Symptoms</a>
+                <a href="/disease">Check Disease</a>
+                <a href="/bloodbank">Check Bloodbank</a>
+                <a href="/about">About Us</a>
+            </ul>
+        </div>
+        <div class="footer-social">
+            <ul>
+                <li><a href="https://www.facebook.com/debanjan.das.10690203?mibextid=ZbWKwL"><i class="fab fa-facebook"></i></a></li>
+                <li><a href="https://twitter.com/DEBANJANDA53702"><i class="fab fa-twitter"></i></a></li>
+                <li><a href="https://www.instagram.com/debanjan_9935"><i class="fab fa-instagram"></i></a></li>
+                <li><a href="https://www.linkedin.com/in/debanjan-das-0b49a921b"><i class="fab fa-linkedin"></i></a></li>
+                <li><a href="https://github.com/debanjan1309"><i class="fab fa-github"></i></a></li>
+            </ul>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 HC. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+</html>
