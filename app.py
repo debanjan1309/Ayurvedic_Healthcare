@@ -4,27 +4,25 @@ import pandas as pd
 import numpy as np
 import os
 from PIL import Image
-from flask_mail import Mail, Message
-from tensorflow.keras.preprocessing.image import load_img, img_to_array
-from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
+from flask_session import Session
+import random
+import re
+# from tensorflow.keras.preprocessing.image import load_img, img_to_array
+# from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
 import tensorflow as tf
 
 app = Flask(__name__)
-
-model = tf.keras.models.load_model("model\plant_identification_model2.h5")
-
-main_data_dir = "static\image\Segmented Medicinal Leaf Images"
+# model = tf.keras.models.load_model("model\\plant_identification_model2.h5")
+# main_data_dir = "static\\image\\Leaf Images"
 
 # Create label mapping based on subdirectory names
-label_mapping = {i: label for i, label in enumerate(sorted(os.listdir(main_data_dir)))}
+# label_mapping = {i: label for i, label in enumerate(sorted(os.listdir(main_data_dir)))}
 
 
 def disease_prediction(Symptom1, Symptom2, Symptom3, Symptom4, Symptom5):
     # Import necessary libraries
     from sklearn.naive_bayes import MultinomialNB
     from sklearn.metrics import accuracy_score
-    import pandas as pd
-    import numpy as np
 
     # Load the dataset and other necessary data
     with open('data/symptoms.json', 'r') as json_file:
@@ -34,7 +32,7 @@ def disease_prediction(Symptom1, Symptom2, Symptom3, Symptom4, Symptom5):
     # Load the testing data
     tr = pd.read_csv("data/Testing.csv")
 
-    # Load the prognosis data
+    # Load the prognosis datas
     with open('data/prognosis.json', 'r') as json_file:
         dataset = json.load(json_file)
     prog = {key: int(value) for key, value in dataset.get("prognosis", {}).items()}
@@ -511,6 +509,287 @@ def haversine(lat1, lon1, lat2, lon2):
     distance = R * c
     return distance
 
+#-------------------------------------------------------------------------------------------------------------->
+
+from sklearn.naive_bayes import MultinomialNB
+# Load data outside the function to avoid reloading on every call
+with open('data/symptoms.json', 'r') as json_file:
+    symptom_data = json.load(json_file)
+l1 = symptom_data.get("name", [])
+
+tr = pd.read_csv("data/Testing.csv")
+with open('data/prognosis.json', 'r') as json_file:
+    prognosis_data = json.load(json_file)
+prog = {key: int(value) for key, value in prognosis_data.get("prognosis", {}).items()}
+prognosis = {"prognosis": prog}
+tr.replace(prognosis, inplace=True)
+X_test = tr[l1]
+
+df = pd.read_csv("data/Training.csv")
+df.replace(prognosis, inplace=True)
+X = df[l1]
+y = df[["prognosis"]]
+np.ravel(y)
+
+# Initialize and fit the Naive Bayes model
+gnb = MultinomialNB()
+gnb = gnb.fit(X, np.ravel(y))
+
+with open('data/disease_name.json', 'r') as json_file:
+    disease_data = json.load(json_file)
+diseases = disease_data.get("disease", [])
+
+# Dictionary for suggested doctors
+suggested_doctors = {
+    "Fungal infection": {
+        "name": "Dr. Nidhi Jindal",
+        "profile_link": "https://www.practo.com/kolkata/doctor/dr-nidhi-jindal-dermatologist?practice_id=1319383&specialization=Dermatologist&referrer=doctor_listing"
+    },
+    "Allergy": {
+        "name": "Dr. Reeja Mariam George",
+        "profile_link": "https://www.practo.com/kolkata/doctor/dr-reeja-mariam-george-general-physician?practice_id=1263361&specialization=Dermatologist&referrer=doctor_listing"
+    },
+    "GERD": {
+        "name": "Dr. Vijay Kumar Rai",
+        "profile_link": "https://www.practo.com/kolkata/doctor/dr-vijay-kumar-rai-gastroenterologist?practice_id=1370187&specialization=Gastroenterologist&referrer=doctor_listing"
+    },
+    "Chronic cholestasis": {
+        "name": "Dr. Debottam Bandyopadhyay",
+        "profile_link": "https://www.practo.com/kolkata/doctor/debottam-bandyopadhyay-gastroenterologist?practice_id=1033173&specialization=Gastroenterologist&referrer=doctor_listing"
+    },
+    "Drug Reaction": {
+        "name": "Dr. Saibal Moitra",
+        "profile_link": "https://www.practo.com/kolkata/doctor/dr-saibal-moitra-allergist-immunologist?practice_id=741280&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
+    },
+    "Peptic ulcer disease": {
+        "name": "Dr. Gautam Das",
+        "profile_link": "https://www.practo.com/kolkata/doctor/dr-gautam-das-gastroenterologist?practice_id=1033173&specialization=Gastroenterologist&referrer=doctor_listing"
+    },
+    "AIDS": {
+        "name": "Dr. Shyama Prasad Roy",
+        "profile_link": "https://www.practo.com/kolkata/doctor/dr-shyama-prasad-roy-general-physician1?practice_id=702842&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
+    },
+    "Diabetes": {
+        "name": "Dr. Sandip Rungta",
+        "profile_link": "https://www.practo.com/kolkata/doctor/dr-sandip-rungta-cardiologist?practice_id=1180689&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
+    },
+    "Gastroenteritis": {
+        "name": "Dr. Jayanta Paul",
+        "profile_link": "https://www.practo.com/kolkata/doctor/dr-jayanta-paul-gastroenterologist-1?practice_id=621621&specialization=Gastroenterologist&referrer=doctor_listing"
+    },
+    "Bronchial Asthma": {
+        "name": "Dr. Shyama Prasad Roy",
+        "profile_link": "https://www.practo.com/kolkata/doctor/dr-shyama-prasad-roy-general-physician1?practice_id=702842&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
+    },
+    "Hypertension": {
+        "name": "Dr. Bodhisatwa Choudhuri",
+        "profile_link": "https://www.practo.com/kolkata/doctor/bodhisatwa-choudhuri-general-physician?practice_id=735842&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
+    },
+    "Migraine": {
+        "name": "Dr. Milan Chhetri",
+        "profile_link": "https://www.practo.com/kolkata/doctor/dr-milan-chhetri-general-physician?practice_id=741280&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
+    },
+    "Cervical spondylosis": {
+        "name": "Dr. Arindam Rath",
+        "profile_link": "https://www.practo.com/kolkata/doctor/dr-arindam-rath-gynecologist-obstetrician-1?practice_id=1316457&specialization=Gynecologist/Obstetrician&referrer=doctor_listing&utm_source=opd_google_Pmax"
+    },
+    "Paralysis (brain hemorrhage)": {
+        "name": "Dr. Sadanand Dey",
+        "profile_link": "https://www.practo.com/kolkata/doctor/sadanand-dey-neurologist?practice_id=741280&specialization=Neurologist&referrer=doctor_listing"
+    },
+    "Jaundice": {
+        "name": "Dr. Shyama Prasad Roy",
+        "profile_link": "https://www.practo.com/kolkata/doctor/dr-shyama-prasad-roy-general-physician1?practice_id=702842&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
+    },
+    "Malaria": {
+        "name": "Dr. Sandip Rungta",
+        "profile_link": "https://www.practo.com/kolkata/doctor/dr-sandip-rungta-cardiologist?practice_id=1180689&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
+    },
+    "Chicken pox": {
+        "name": "Dr. Bodhisatwa Choudhuri",
+        "profile_link": "https://www.practo.com/kolkata/doctor/bodhisatwa-choudhuri-general-physician?practice_id=735842&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
+    },
+    "Dengue": {
+        "name": "Dr. Saibal Moitra",
+        "profile_link": "https://www.practo.com/kolkata/doctor/dr-saibal-moitra-allergist-immunologist?practice_id=741280&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
+    },
+    "Typhoid": {
+        "name": "Dr. Bodhisatwa Choudhuri",
+        "profile_link": "https://www.practo.com/kolkata/doctor/bodhisatwa-choudhuri-general-physician?practice_id=735842&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
+    },
+    "hepatitis A": {
+        "name": "Dr. Sanjoy Basu",
+        "profile_link": "https://www.practo.com/kolkata/doctor/sanjoy-basu?practice_id=1250516&specialization=Gastroenterologist&referrer=doctor_listing"
+    },
+    "Hepatitis B": {
+        "name": "Dr. Sanjoy Basu",
+        "profile_link": "https://www.practo.com/kolkata/doctor/sanjoy-basu?practice_id=1250516&specialization=Gastroenterologist&referrer=doctor_listing"
+    },
+    "Hepatitis C": {
+        "name": "Dr. Sanjoy Basu",
+        "profile_link": "https://www.practo.com/kolkata/doctor/sanjoy-basu?practice_id=1250516&specialization=Gastroenterologist&referrer=doctor_listing"
+    },
+    "Hepatitis D": {
+        "name": "Dr. Sanjoy Basu",
+        "profile_link": "https://www.practo.com/kolkata/doctor/sanjoy-basu?practice_id=1250516&specialization=Gastroenterologist&referrer=doctor_listing"
+    },
+    "Hepatitis E": {
+        "name": "Dr. Sanjoy Basu",
+        "profile_link": "https://www.practo.com/kolkata/doctor/sanjoy-basu?practice_id=1250516&specialization=Gastroenterologist&referrer=doctor_listing"
+    },
+    "Alcoholic hepatitis": {
+        "name": "Dr. Sanjoy Basu",
+        "profile_link": "https://www.practo.com/kolkata/doctor/sanjoy-basu?practice_id=1250516&specialization=Gastroenterologist&referrer=doctor_listing"
+    },
+    "Tuberculosis": {
+        "name": "Dr. Sumanta Chatterjee",
+        "profile_link": "https://www.practo.com/kolkata/doctor/dr-sumanta-chattarjee-general-physician?practice_id=1033173&specialization=Cardiologist&referrer=doctor_listing"
+    },
+    "Common Cold": {
+        "name": "Dr. Milan Chhetri",
+        "profile_link": "https://www.practo.com/kolkata/doctor/dr-milan-chhetri-general-physician?practice_id=741280&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
+    },
+    "Pneumonia": {
+        "name": "Dr. Parijat Debchoudhury",
+        "profile_link": "https://www.practo.com/kolkata/doctor/parijat-debchoudhury-cardiologist?practice_id=1247064&specialization=Cardiologist&referrer=doctor_listing"
+    },
+    "Dimorphic hemorrhoids (piles)": {
+        "name": "Dr. Jayanta Paul",
+        "profile_link": "https://www.practo.com/kolkata/doctor/dr-jayanta-paul-gastroenterologist-1?practice_id=621621&specialization=Gastroenterologist&referrer=doctor_listing"
+    },
+    "Heart attack": {
+        "name": "Dr. Aftab Khan",
+        "profile_link": "https://www.practo.com/kolkata/doctor/dr-aftab-khan-cardiologist?practice_id=741280&specialization=Cardiologist&referrer=doctor_listing"
+    },
+    "Varicose veins": {
+        "name": "Dr. Nikhil Prasun",
+        "profile_link": "https://www.practo.com/kolkata/doctor/nikhil-prasun-neurologist?practice_id=735842&specialization=Neurologist&referrer=doctor_listing"
+    },
+    "Hypothyroidism": {
+        "name": "Dr. Shyama Prasad Roy",
+        "profile_link": "https://www.practo.com/kolkata/doctor/dr-shyama-prasad-roy-general-physician1?practice_id=702842&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
+    },
+    "Hyperthyroidism": {
+        "name": "Dr. Sandip Rungta",
+        "profile_link": "https://www.practo.com/kolkata/doctor/dr-sandip-rungta-cardiologist?practice_id=1180689&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
+    },
+    "Hypoglycemia": {
+        "name": "Dr. Saibal Moitra",
+        "profile_link": "https://www.practo.com/kolkata/doctor/dr-saibal-moitra-allergist-immunologist?practice_id=741280&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
+    },
+    "Osteoarthristis": {
+        "name": "Dr. Saumitra Sircar",
+        "profile_link": "https://www.practo.com/kolkata/doctor/saumitra-sircar-orthopedist?practice_id=1142246&specialization=Orthopedist&referrer=doctor_listing&utm_source=opd_google_dsa"
+    },
+    "Arthritis": {
+        "name": "Dr. Amitava Narayan Mukherjee",
+        "profile_link": "https://www.practo.com/kolkata/doctor/dr-amitava-narayan-mukherjee-orthopedist?practice_id=635703&specialization=Orthopedist&referrer=doctor_listing&utm_source=opd_google_dsa"
+    },
+    "(Vertigo) Paroxysmal Positional Vertigo": {
+        "name": "Dr. Subhankar Dey",
+        "profile_link": "https://www.practo.com/kolkata/doctor/subhankar-dey-ear-nose-throat-ent-specialist?practice_id=741280&specialization=Ear-Nose-Throat%20(ENT)%20Specialist&referrer=doctor_listing"
+    },
+    "Acne": {
+        "name": "Dr. Khushbu Tantia",
+        "profile_link": "https://www.practo.com/kolkata/doctor/dr-khushbu-tantia-dermatologist-1?practice_id=1347314&specialization=Dermatologist&referrer=doctor_listing"
+    },
+    "Urinary tract infection": {
+        "name": "Dr. Md. Mohsin",
+        "profile_link": "https://www.practo.com/kolkata/doctor/md-mohsin-1-nephrologist?practice_id=741280&specialization=Nephrologist&referrer=doctor_listing"
+    },
+    "Psoriasis": {
+        "name": "Dr. Debatri Datta",
+        "profile_link": "https://www.practo.com/kolkata/doctor/dr-debatri-datta-dermatologist?practice_id=1319383&specialization=Dermatologist&referrer=doctor_listing"
+    },
+    "Impetigo": {
+        "name": "Dr. Barnali Dutta",
+        "profile_link": "https://www.practo.com/kolkata/doctor/dr-barnali-dutta-dermatologist?practice_id=1277028&specialization=Dermatologist&referrer=doctor_listing"
+    }
+}
+
+# Variables to keep track of the conversation state
+waiting_for_symptoms = False
+symptoms = []
+waiting_for_disease = False
+disease = []
+
+def disease_prediction(symptoms):
+    psymptoms = symptoms
+    l2 = [0] * len(l1)
+
+    for k in range(len(l1)):
+        for z in psymptoms:
+            if z == l1[k]:
+                l2[k] = 1
+
+    inputtest = [l2]
+    predicted = gnb.predict(inputtest)[0]
+    predicted_disease = diseases[predicted]
+    suggested_doctor = suggested_doctors.get(predicted_disease, "Doctor information not available")
+    return predicted_disease, suggested_doctor
+
+def get_bot_response(message):
+    global waiting_for_symptoms, symptoms, waiting_for_disease, disease
+    
+    
+    message = message.lower()
+    
+    greetings = {
+        r"hi|hello|hey": ["Hello!", "Hi there!", "Hey!", "How're you doing today?How may I help you today?"],
+        r"good morning": ["Good morning! How can I help you?", "Morning! What can I do for you?", "Good morning! How can I assist?", "Good Morning!Hope you're doing well"],
+        r"good night": ["Good night! Take care!", "Night! Sweet dreams!", "Good night! See you tomorrow!", "Take care!Hope I could have been of some help!"],
+        r"bye|goodbye": ["Goodbye! Have a great day!", "Bye! Take care!", "Goodbye! See you soon!", "Adios amigos!"],
+        r"how can i help you|how can i assist you": ["I am here to assist you. What do you need help with?", "How can I assist you today?", "What can I do for you?", "Let me know what you're looking for in particular"],
+        r"thanks|thank you": ["Welcome...","Mention not","Always there for you...", "Stay Happy, Stay Healthy..."]
+    }
+
+    if waiting_for_symptoms:
+        if message == "done":
+            if len(symptoms) == 0:
+                return "You haven't provided any symptoms. Please provide at least one symptom."
+            predicted_disease, suggested_doctor = disease_prediction(symptoms)
+            waiting_for_symptoms = False
+            symptoms = []
+            doctor_name = suggested_doctor.get('name', 'Doctor information not available')
+            profile_link = suggested_doctor.get('profile_link', 'N/A')
+            return (f"The predicted disease is {predicted_disease}.\n"
+                    f"Suggested doctor: {doctor_name}\n"
+                    f"Profile link: <a href='{profile_link}' target='_blank'>Click Here</a>")
+        else:
+            if len(symptoms) < 5:
+                symptoms.append(message)
+                return f"Got it. Please provide another symptom or type 'done' to finish. Symptoms received: {len(symptoms)}"
+            else:
+                return "You have already provided the maximum number of symptoms. Please type 'done' to finish."
+
+    if waiting_for_disease:
+        waiting_for_disease = False
+        disease = message
+        with open('data/disease_data.json', 'r') as json_file:
+            disease_symptoms = json.load(json_file)
+        if disease in disease_symptoms:
+            symptoms = disease_symptoms[disease]
+            return f"The symptoms for {disease} are: {', '.join(symptoms)}"
+        else:
+            return "Disease not found. Please try another disease name."
+    
+    for pattern, responses in greetings.items():
+        if re.search(pattern, message):
+            return random.choice(responses)
+    
+    if re.search(r"disease|disease prediction", message):
+        waiting_for_symptoms = True
+        symptoms = []
+        return "Tell us your top 5 symptoms one by one. Enter 'done' if no more symptoms left. Enter your first symptom."
+    
+    if re.search(r"symptom", message):
+        waiting_for_disease = True
+        disease = []
+        return "Please provide the name of the disease to get its symptoms."
+    
+    return 'Sorry, I did not understand that. Please try again.'
+
+
 @app.route('/', methods=['GET', 'POST'])
 def ayurvedic():
     if request.method == 'POST':
@@ -541,21 +820,27 @@ def upload():
             return redirect(url_for('predicted', image_path=image_path))
     return render_template('upload.html')
 
-@app.route('/predict/<image_path>')
-def predicted(image_path):
-    preprocessed_image = preprocess_image(image_path)
-    predictions = model.predict(preprocessed_image)
-    predicted_label_index = np.argmax(predictions)
-    predicted_label = label_mapping[predicted_label_index]
-    confidence = predictions[0][predicted_label_index]
-    return render_template('predicted_results.html', predicted_label=predicted_label, confidence=confidence, image_path=image_path)
+@app.route('/chat', methods=['POST'])
+def chat():
+    user_input = request.json.get('message')
+    bot_response = get_bot_response(user_input)
+    return jsonify({'response': bot_response})
 
-def preprocess_image(image_path):
-    image = load_img(image_path, target_size=(224, 224))
-    image_array = img_to_array(image)
-    image_array = np.expand_dims(image_array, axis=0)
-    preprocessed_image = preprocess_input(image_array)
-    return preprocessed_image
+# @app.route('/predict/<image_path>')
+# def predicted(image_path):
+#     preprocessed_image = preprocess_image(image_path)
+#     predictions = model.predict(preprocessed_image)
+#     predicted_label_index = np.argmax(predictions)
+#     predicted_label = label_mapping[predicted_label_index]
+#     confidence = predictions[0][predicted_label_index]
+#     return render_template('predicted_results.html', predicted_label=predicted_label, confidence=confidence, image_path=image_path)
+
+# def preprocess_image(image_path):
+#     image = load_img(image_path, target_size=(224, 224))
+#     image_array = img_to_array(image)
+#     image_array = np.expand_dims(image_array, axis=0)
+#     preprocessed_image = preprocess_input(image_array)
+#     return preprocessed_image
 
 @app.route('/about')
 def about():
