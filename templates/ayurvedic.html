@@ -1,8 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title>Ayurveda</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="static/style2.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='1.css') }}">
     <!-- <link rel="stylesheet" type="text/css" href="static/style.css"> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
 </head>
@@ -27,6 +30,23 @@
         </div>
     </header>
 
+    <!-- -------------------------------------Chatbot------------------------------------- -->
+
+    <div id="chatbot-icon">
+        <img src="{{ url_for('static', filename='chat-icon.png') }}" alt="Chatbot Icon" />
+    </div>
+    <div id="chatbot-container">
+        <div id="chatbot-header">
+            <span>Chatbot</span>
+            <button id="close-chatbot">&times;</button>
+        </div>
+        <div id="chat-log"></div>
+        <form id="chat-form">
+            <input type="text" id="user-input" placeholder="Type a message..." required>
+            <button type="submit">Send</button>
+        </form>
+    </div>
+
     <!-- -------------------------------------AYURVEDA------------------------------------ -->
     <div class="container">
         <div class="image-container">
@@ -43,7 +63,7 @@
     </div>
 
     <!-- -------------------------------------PLANT IDENTIFICATION--------------------------- -->
-    <div class="container">
+    <!-- <div class="container">
         <div class="text-container">
             <h1>Plant Indentification</h1>
             <br>
@@ -65,13 +85,10 @@
         <div class="image-container">
             <img id="slideshow1" src="" alt="Image 10">
         </div>
-    </div>
+    </div> -->
 
     <!-- -------------------------------------Check Symptoms--------------------------- -->
     <div class="container">
-        <div class="image-container">
-            <img id="slideshow2" src="" alt="Image 1">
-        </div>
         <div class="text-container">
             <h1>Ayurvedic Symptom Checker</h1>
             <br>
@@ -83,10 +100,16 @@
                 Click Here
             </button>
         </div>
+        <div class="image-container">
+            <img id="slideshow2" src="" alt="Image 1">
+        </div>
     </div>
 
         <!-- -------------------------------------Check Disease--------------------------- -->
         <div class="container">
+            <div class="image-container">
+                <img id="slideshow3" src="" alt="Image 1">
+            </div>
             <div class="text-container">
                 <h1>Ayurvedic Disease Checker</h1>
                 <br>
@@ -98,16 +121,10 @@
                     Click Here
                 </button>
             </div>
-            <div class="image-container">
-                <img id="slideshow3" src="" alt="Image 1">
-            </div>
         </div>
 
         <!-- -------------------------------------Check Bloodbank--------------------------- -->
         <div class="container">
-            <div class="image-container">
-                <img id="slideshow4" src="" alt="Image 1">
-            </div>
             <div class="text-container">
                 <h1>Bloodbank Locator</h1>
                 <br>
@@ -118,6 +135,9 @@
                 <button onclick="location.href='/bloodbank';">
                     Click Here
                 </button>
+            </div>
+            <div class="image-container">
+                <img id="slideshow4" src="" alt="Image 1">
             </div>
         </div>
     <script src="static/slideshow.js"></script>
@@ -161,6 +181,7 @@
             }
         });
         </script>
+        <script src="{{ url_for('static', filename='chatbot.js') }}"></script>
 
     <footer>
         <div class="footer-content">
