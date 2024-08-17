@@ -9,7 +9,12 @@ import random
 import re
 # from tensorflow.keras.preprocessing.image import load_img, img_to_array
 # from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
-import tensorflow as tf
+# import tensorflow as tf
+import tkinter as tk
+from tkinter import messagebox
+import csv
+import math
+from geopy.geocoders import Nominatim
 
 app = Flask(__name__)
 # model = tf.keras.models.load_model("model\\plant_identification_model2.h5")
@@ -72,183 +77,14 @@ def disease_prediction(Symptom1, Symptom2, Symptom3, Symptom4, Symptom5):
 
     diseases = dataset.get("disease",[])
 
-    # Define suggested doctors for each disease
-    suggested_doctors = {
-        "Fungal infection": {
-            "name": "Dr. Nidhi Jindal",
-            "profile_link": "https://www.practo.com/kolkata/doctor/dr-nidhi-jindal-dermatologist?practice_id=1319383&specialization=Dermatologist&referrer=doctor_listing"
-        },
-        " Allergy ": {
-            "name": " Dr. Reeja Mariam George ",
-            "profile_link": " https://www.practo.com/kolkata/doctor/dr-reeja-mariam-george-general-physician?practice_id=1263361&specialization=Dermatologist&referrer=doctor_listing "
-        },
-        "GERD": {
-            "name": "Dr. Vijay Kumar Rai",
-            "profile_link": "https://www.practo.com/kolkata/doctor/dr-vijay-kumar-rai-gastroenterologist?practice_id=1370187&specialization=Gastroenterologist&referrer=doctor_listing"
-        },
-        "Chronic cholestasis": {
-            "name": "Dr. Debottam Bandyopadhyay",
-            "profile_link": "https://www.practo.com/kolkata/doctor/debottam-bandyopadhyay-gastroenterologist?practice_id=1033173&specialization=Gastroenterologist&referrer=doctor_listing"
-        },
-        "Drug Reaction": {
-            "name": "Dr. Saibal Moitra",
-            "profile_link": "https://www.practo.com/kolkata/doctor/dr-saibal-moitra-allergist-immunologist?practice_id=741280&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
-        },
-        "Peptic ulcer disease": {
-            "name": "Dr. Gautam Das",
-            "profile_link": "https://www.practo.com/kolkata/doctor/dr-gautam-das-gastroenterologist?practice_id=1033173&specialization=Gastroenterologist&referrer=doctor_listing"
-        },
-        "AIDS": {
-            "name": "Dr. Shyama Prasad Roy",
-            "profile_link": "https://www.practo.com/kolkata/doctor/dr-shyama-prasad-roy-general-physician1?practice_id=702842&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
-        },
-        "Diabetes": {
-            "name": "Dr. Sandip Rungta",
-            "profile_link": "https://www.practo.com/kolkata/doctor/dr-sandip-rungta-cardiologist?practice_id=1180689&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
-        },
-        "Gastroenteritis": {
-            "name": "Dr. Jayanta Paul",
-            "profile_link": "https://www.practo.com/kolkata/doctor/dr-jayanta-paul-gastroenterologist-1?practice_id=621621&specialization=Gastroenterologist&referrer=doctor_listing"
-        },
-        "Bronchial Asthma": {
-            "name": "Dr. Shyama Prasad Roy",
-            "profile_link": "https://www.practo.com/kolkata/doctor/dr-shyama-prasad-roy-general-physician1?practice_id=702842&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
-        },
-        "Hypertension": {
-            "name": "Dr. Bodhisatwa Choudhuri",
-            "profile_link": "https://www.practo.com/kolkata/doctor/bodhisatwa-choudhuri-general-physician?practice_id=735842&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
-        },
-        "Migraine": {
-            "name": "Dr. Milan Chhetri",
-            "profile_link": "https://www.practo.com/kolkata/doctor/dr-milan-chhetri-general-physician?practice_id=741280&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
-        },
-        "Cervical spondylosis": {
-            "name": "Dr. Arindam Rath",
-            "profile_link": "https://www.practo.com/kolkata/doctor/dr-arindam-rath-gynecologist-obstetrician-1?practice_id=1316457&specialization=Gynecologist/Obstetrician&referrer=doctor_listing&utm_source=opd_google_Pmax"
-        },
-        "Paralysis (brain hemorrhage)": {
-            "name": "Dr. Sadanand Dey",
-            "profile_link": "https://www.practo.com/kolkata/doctor/sadanand-dey-neurologist?practice_id=741280&specialization=Neurologist&referrer=doctor_listing"
-        },
-        "Jaundice": {
-            "name": "Dr. Shyama Prasad Roy",
-            "profile_link": "https://www.practo.com/kolkata/doctor/dr-shyama-prasad-roy-general-physician1?practice_id=702842&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
-        },
-        "Malaria": {
-            "name": "Dr. Sandip Rungta",
-            "profile_link": "https://www.practo.com/kolkata/doctor/dr-sandip-rungta-cardiologist?practice_id=1180689&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
-        },
-        "Chicken pox": {
-            "name": "Dr. Bodhisatwa Choudhuri",
-            "profile_link": "https://www.practo.com/kolkata/doctor/bodhisatwa-choudhuri-general-physician?practice_id=735842&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
-        },
-        "Dengue": {
-            "name": "Dr. Saibal Moitra",
-            "profile_link": "https://www.practo.com/kolkata/doctor/dr-saibal-moitra-allergist-immunologist?practice_id=741280&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
-        },
-        "Typhoid": {
-            "name": "Dr. Bodhisatwa Choudhuri",
-            "profile_link": "https://www.practo.com/kolkata/doctor/bodhisatwa-choudhuri-general-physician?practice_id=735842&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
-        },
-        "hepatitis A": {
-            "name": "Dr. Sanjoy Basu",
-            "profile_link": "https://www.practo.com/kolkata/doctor/sanjoy-basu?practice_id=1250516&specialization=Gastroenterologist&referrer=doctor_listing"
-        },
-        "Hepatitis B": {
-            "name": "Dr. Sanjoy Basu",
-            "profile_link": "https://www.practo.com/kolkata/doctor/sanjoy-basu?practice_id=1250516&specialization=Gastroenterologist&referrer=doctor_listing"
-        },
-        "Hepatitis C": {
-            "name": "Dr. Sanjoy Basu",
-            "profile_link": "https://www.practo.com/kolkata/doctor/sanjoy-basu?practice_id=1250516&specialization=Gastroenterologist&referrer=doctor_listing"
-        },
-        "Hepatitis D": {
-            "name": "Dr. Sanjoy Basu",
-            "profile_link": "https://www.practo.com/kolkata/doctor/sanjoy-basu?practice_id=1250516&specialization=Gastroenterologist&referrer=doctor_listing"
-        },
-        "Hepatitis E": {
-            "name": "Dr. Sanjoy Basu",
-            "profile_link": "https://www.practo.com/kolkata/doctor/sanjoy-basu?practice_id=1250516&specialization=Gastroenterologist&referrer=doctor_listing"
-        },
-        "Alcoholic hepatitis": {
-            "name": "Dr. Sanjoy Basu",
-            "profile_link": "https://www.practo.com/kolkata/doctor/sanjoy-basu?practice_id=1250516&specialization=Gastroenterologist&referrer=doctor_listing"
-        },
-        "Tuberculosis": {
-            "name": "Dr. Sumanta Chatterjee",
-            "profile_link": "https://www.practo.com/kolkata/doctor/dr-sumanta-chattarjee-general-physician?practice_id=1033173&specialization=Cardiologist&referrer=doctor_listing"
-        },
-        "Common Cold": {
-            "name": "Dr. Milan Chhetri",
-            "profile_link": "https://www.practo.com/kolkata/doctor/dr-milan-chhetri-general-physician?practice_id=741280&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
-        },
-        "Pneumonia": {
-            "name": "Dr. Parijat Debchoudhury",
-            "profile_link": "https://www.practo.com/kolkata/doctor/parijat-debchoudhury-cardiologist?practice_id=1247064&specialization=Cardiologist&referrer=doctor_listing"
-        },
-        "Dimorphic hemorrhoids (piles)": {
-            "name": "Dr. Jayanta Paul",
-            "profile_link": "https://www.practo.com/kolkata/doctor/dr-jayanta-paul-gastroenterologist-1?practice_id=621621&specialization=Gastroenterologist&referrer=doctor_listing"
-        },
-        "Heart attack": {
-            "name": "Dr. Aftab Khan",
-            "profile_link": "https://www.practo.com/kolkata/doctor/dr-aftab-khan-cardiologist?practice_id=741280&specialization=Cardiologist&referrer=doctor_listing"
-        },
-        "Varicose veins": {
-            "name": "Dr. Nikhil Prasun",
-            "profile_link": "https://www.practo.com/kolkata/doctor/nikhil-prasun-neurologist?practice_id=735842&specialization=Neurologist&referrer=doctor_listing"
-        },
-        "Hypothyroidism": {
-            "name": "Dr. Shyama Prasad Roy",
-            "profile_link": "https://www.practo.com/kolkata/doctor/dr-shyama-prasad-roy-general-physician1?practice_id=702842&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
-        },
-        "Hyperthyroidism": {
-            "name": "Dr. Sandip Rungta",
-            "profile_link": "https://www.practo.com/kolkata/doctor/dr-sandip-rungta-cardiologist?practice_id=1180689&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
-        },
-        "Hypoglycemia": {
-            "name": "Dr. Saibal Moitra",
-            "profile_link": "https://www.practo.com/kolkata/doctor/dr-saibal-moitra-allergist-immunologist?practice_id=741280&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
-        },
-        "Osteoarthristis": {
-            "name": "Dr. Saumitra Sircar",
-            "profile_link": "https://www.practo.com/kolkata/doctor/saumitra-sircar-orthopedist?practice_id=1142246&specialization=Orthopedist&referrer=doctor_listing&utm_source=opd_google_dsa"
-        },
-        "Arthritis": {
-            "name": "Dr. Amitava Narayan Mukherjee",
-            "profile_link": "https://www.practo.com/kolkata/doctor/dr-amitava-narayan-mukherjee-orthopedist?practice_id=635703&specialization=Orthopedist&referrer=doctor_listing&utm_source=opd_google_dsa"
-        },
-        "(Vertigo) Paroxysmal Positional Vertigo": {
-            "name": "Dr. Subhankar Dey",
-            "profile_link": "https://www.practo.com/kolkata/doctor/subhankar-dey-ear-nose-throat-ent-specialist?practice_id=741280&specialization=Ear-Nose-Throat%20(ENT)%20Specialist&referrer=doctor_listing"
-        },
-        "Acne": {
-            "name": "Dr. Khushbu Tantia",
-            "profile_link": "https://www.practo.com/kolkata/doctor/dr-khushbu-tantia-dermatologist-1?practice_id=1347314&specialization=Dermatologist&referrer=doctor_listing"
-        },
-        "Urinary tract infection": {
-            "name": "Dr. Md. Mohsin",
-            "profile_link": "https://www.practo.com/kolkata/doctor/md-mohsin-1-nephrologist?practice_id=741280&specialization=Nephrologist&referrer=doctor_listing"
-        },
-        "Psoriasis": {
-            "name": "Dr. Debatri Datta",
-            "profile_link": "https://www.practo.com/kolkata/doctor/dr-debatri-datta-dermatologist?practice_id=1319383&specialization=Dermatologist&referrer=doctor_listing"
-        },
-        "Impetigo": {
-            "name": "Dr. Barnali Dutta",
-            "profile_link": "https://www.practo.com/kolkata/doctor/dr-barnali-dutta-dermatologist?practice_id=1277028&specialization=Dermatologist&referrer=doctor_listing"
-        }
-    }
-
-
+    with open('data/doctors.json', 'r') as file:
+        suggested_doctors = json.load(file)
 
     # Get the predicted disease and suggested doctor
     predicted_disease = diseases[predicted]
-    suggested_doctor = suggested_doctors.get(predicted_disease, "Doctor information not available")
+    suggested_doctor = suggested_doctors.get(predicted_disease, {"name": "Doctor information not available", "profile_link": ""})
 
     return predicted_disease, suggested_doctor
-
-import json
 
 # Function to save user data to the JSON file
 def save_users(users):
@@ -313,11 +149,13 @@ def register():
 def home():
     return render_template('home.html')
 
+#------------------------------------------------------------------------------------------------------------------>
+
 @app.route('/symptoms', methods=['GET', 'POST'])
 def symptoms():
     if request.method == 'POST':
         disease = request.form['disease']
-        with open('data/disease_data.json', 'r') as json_file:
+        with open('data/disease_data1.json', 'r') as json_file:
             disease_symptoms = json.load(json_file)
         if disease in disease_symptoms:
             symptoms = disease_symptoms[disease]
@@ -330,14 +168,13 @@ def symptoms():
 @app.route('/get_suggestions')
 def get_suggestions():
     query = request.args.get('query')
-    with open('data/disease_data.json', 'r') as json_file:
+    with open('data/disease_data1.json', 'r') as json_file:
         disease_symptoms = json.load(json_file)
     suggestions = sorted(list(disease_symptoms.keys()))
     filtered_suggestions = [suggestion for suggestion in suggestions if query.lower() in suggestion.lower()]
     return jsonify(filtered_suggestions)
 
-
-#---------------------------------------------------------------------->
+#--------------------------------------------------------------------------------------------------------------------->
 
 @app.route('/disease')
 def disease():
@@ -360,14 +197,7 @@ def predict():
         # Render the results.html template with prediction results
         return render_template('results.html', disease=predicted_disease, doctor=suggested_doctor)
 
-#---------------------------------------------------------------------->
-
-import tkinter as tk
-from tkinter import messagebox
-import csv
-import math
-from geopy.geocoders import Nominatim
-from flask import Flask, render_template, request
+#---------------------------------------------------------------------------------------------------------------------->
 
 # Global data list to store donor information
 data = []
@@ -408,7 +238,9 @@ def bloodbank():
 
 @app.route('/add_donor', methods=['GET', 'POST'])
 def add_donor_route():
-    bloodbank_names= sorted(["PEERLESS HOSPITAL","SSKM HOSPITAL BLOOD BANK","FORTIS HOSPITALS LIMITED BLOOD BANK","SOUTH EAST KOLKATA MANAB KALYAN","RUBY GENERAL HOSPITAL","LIONS BLOOD BANK","IBTM&IH","OM BLOOD BANK KOLKATA","LIFE CARE BLOOD BANK","BHORUKA BLOOD BANK","PEOPLE'S BLOODBANK"])
+    bloodbank_names= sorted(["PEERLESS HOSPITAL","SSKM HOSPITAL BLOOD BANK","FORTIS HOSPITALS LIMITED BLOOD BANK",\
+                            "SOUTH EAST KOLKATA MANAB KALYAN","RUBY GENERAL HOSPITAL","LIONS BLOOD BANK","IBTM&IH",\
+                            "OM BLOOD BANK KOLKATA","LIFE CARE BLOOD BANK","BHORUKA BLOOD BANK","PEOPLE'S BLOODBANK"])
     bloodbanks=[
         {"name": "PEERLESS HOSPITAL", "longitude": "88.3939707", "latitude": "22.4810427"},
         {"name": "FORTIS HOSPITALS LIMITED BLOOD BANK", "longitude": "88.3990948", "latitude": "22.5181021"},
@@ -539,173 +371,9 @@ with open('data/disease_name.json', 'r') as json_file:
     disease_data = json.load(json_file)
 diseases = disease_data.get("disease", [])
 
-# Dictionary for suggested doctors
-suggested_doctors = {
-    "Fungal infection": {
-        "name": "Dr. Nidhi Jindal",
-        "profile_link": "https://www.practo.com/kolkata/doctor/dr-nidhi-jindal-dermatologist?practice_id=1319383&specialization=Dermatologist&referrer=doctor_listing"
-    },
-    "Allergy": {
-        "name": "Dr. Reeja Mariam George",
-        "profile_link": "https://www.practo.com/kolkata/doctor/dr-reeja-mariam-george-general-physician?practice_id=1263361&specialization=Dermatologist&referrer=doctor_listing"
-    },
-    "GERD": {
-        "name": "Dr. Vijay Kumar Rai",
-        "profile_link": "https://www.practo.com/kolkata/doctor/dr-vijay-kumar-rai-gastroenterologist?practice_id=1370187&specialization=Gastroenterologist&referrer=doctor_listing"
-    },
-    "Chronic cholestasis": {
-        "name": "Dr. Debottam Bandyopadhyay",
-        "profile_link": "https://www.practo.com/kolkata/doctor/debottam-bandyopadhyay-gastroenterologist?practice_id=1033173&specialization=Gastroenterologist&referrer=doctor_listing"
-    },
-    "Drug Reaction": {
-        "name": "Dr. Saibal Moitra",
-        "profile_link": "https://www.practo.com/kolkata/doctor/dr-saibal-moitra-allergist-immunologist?practice_id=741280&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
-    },
-    "Peptic ulcer disease": {
-        "name": "Dr. Gautam Das",
-        "profile_link": "https://www.practo.com/kolkata/doctor/dr-gautam-das-gastroenterologist?practice_id=1033173&specialization=Gastroenterologist&referrer=doctor_listing"
-    },
-    "AIDS": {
-        "name": "Dr. Shyama Prasad Roy",
-        "profile_link": "https://www.practo.com/kolkata/doctor/dr-shyama-prasad-roy-general-physician1?practice_id=702842&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
-    },
-    "Diabetes": {
-        "name": "Dr. Sandip Rungta",
-        "profile_link": "https://www.practo.com/kolkata/doctor/dr-sandip-rungta-cardiologist?practice_id=1180689&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
-    },
-    "Gastroenteritis": {
-        "name": "Dr. Jayanta Paul",
-        "profile_link": "https://www.practo.com/kolkata/doctor/dr-jayanta-paul-gastroenterologist-1?practice_id=621621&specialization=Gastroenterologist&referrer=doctor_listing"
-    },
-    "Bronchial Asthma": {
-        "name": "Dr. Shyama Prasad Roy",
-        "profile_link": "https://www.practo.com/kolkata/doctor/dr-shyama-prasad-roy-general-physician1?practice_id=702842&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
-    },
-    "Hypertension": {
-        "name": "Dr. Bodhisatwa Choudhuri",
-        "profile_link": "https://www.practo.com/kolkata/doctor/bodhisatwa-choudhuri-general-physician?practice_id=735842&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
-    },
-    "Migraine": {
-        "name": "Dr. Milan Chhetri",
-        "profile_link": "https://www.practo.com/kolkata/doctor/dr-milan-chhetri-general-physician?practice_id=741280&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
-    },
-    "Cervical spondylosis": {
-        "name": "Dr. Arindam Rath",
-        "profile_link": "https://www.practo.com/kolkata/doctor/dr-arindam-rath-gynecologist-obstetrician-1?practice_id=1316457&specialization=Gynecologist/Obstetrician&referrer=doctor_listing&utm_source=opd_google_Pmax"
-    },
-    "Paralysis (brain hemorrhage)": {
-        "name": "Dr. Sadanand Dey",
-        "profile_link": "https://www.practo.com/kolkata/doctor/sadanand-dey-neurologist?practice_id=741280&specialization=Neurologist&referrer=doctor_listing"
-    },
-    "Jaundice": {
-        "name": "Dr. Shyama Prasad Roy",
-        "profile_link": "https://www.practo.com/kolkata/doctor/dr-shyama-prasad-roy-general-physician1?practice_id=702842&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
-    },
-    "Malaria": {
-        "name": "Dr. Sandip Rungta",
-        "profile_link": "https://www.practo.com/kolkata/doctor/dr-sandip-rungta-cardiologist?practice_id=1180689&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
-    },
-    "Chicken pox": {
-        "name": "Dr. Bodhisatwa Choudhuri",
-        "profile_link": "https://www.practo.com/kolkata/doctor/bodhisatwa-choudhuri-general-physician?practice_id=735842&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
-    },
-    "Dengue": {
-        "name": "Dr. Saibal Moitra",
-        "profile_link": "https://www.practo.com/kolkata/doctor/dr-saibal-moitra-allergist-immunologist?practice_id=741280&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
-    },
-    "Typhoid": {
-        "name": "Dr. Bodhisatwa Choudhuri",
-        "profile_link": "https://www.practo.com/kolkata/doctor/bodhisatwa-choudhuri-general-physician?practice_id=735842&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
-    },
-    "hepatitis A": {
-        "name": "Dr. Sanjoy Basu",
-        "profile_link": "https://www.practo.com/kolkata/doctor/sanjoy-basu?practice_id=1250516&specialization=Gastroenterologist&referrer=doctor_listing"
-    },
-    "Hepatitis B": {
-        "name": "Dr. Sanjoy Basu",
-        "profile_link": "https://www.practo.com/kolkata/doctor/sanjoy-basu?practice_id=1250516&specialization=Gastroenterologist&referrer=doctor_listing"
-    },
-    "Hepatitis C": {
-        "name": "Dr. Sanjoy Basu",
-        "profile_link": "https://www.practo.com/kolkata/doctor/sanjoy-basu?practice_id=1250516&specialization=Gastroenterologist&referrer=doctor_listing"
-    },
-    "Hepatitis D": {
-        "name": "Dr. Sanjoy Basu",
-        "profile_link": "https://www.practo.com/kolkata/doctor/sanjoy-basu?practice_id=1250516&specialization=Gastroenterologist&referrer=doctor_listing"
-    },
-    "Hepatitis E": {
-        "name": "Dr. Sanjoy Basu",
-        "profile_link": "https://www.practo.com/kolkata/doctor/sanjoy-basu?practice_id=1250516&specialization=Gastroenterologist&referrer=doctor_listing"
-    },
-    "Alcoholic hepatitis": {
-        "name": "Dr. Sanjoy Basu",
-        "profile_link": "https://www.practo.com/kolkata/doctor/sanjoy-basu?practice_id=1250516&specialization=Gastroenterologist&referrer=doctor_listing"
-    },
-    "Tuberculosis": {
-        "name": "Dr. Sumanta Chatterjee",
-        "profile_link": "https://www.practo.com/kolkata/doctor/dr-sumanta-chattarjee-general-physician?practice_id=1033173&specialization=Cardiologist&referrer=doctor_listing"
-    },
-    "Common Cold": {
-        "name": "Dr. Milan Chhetri",
-        "profile_link": "https://www.practo.com/kolkata/doctor/dr-milan-chhetri-general-physician?practice_id=741280&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
-    },
-    "Pneumonia": {
-        "name": "Dr. Parijat Debchoudhury",
-        "profile_link": "https://www.practo.com/kolkata/doctor/parijat-debchoudhury-cardiologist?practice_id=1247064&specialization=Cardiologist&referrer=doctor_listing"
-    },
-    "Dimorphic hemorrhoids (piles)": {
-        "name": "Dr. Jayanta Paul",
-        "profile_link": "https://www.practo.com/kolkata/doctor/dr-jayanta-paul-gastroenterologist-1?practice_id=621621&specialization=Gastroenterologist&referrer=doctor_listing"
-    },
-    "Heart attack": {
-        "name": "Dr. Aftab Khan",
-        "profile_link": "https://www.practo.com/kolkata/doctor/dr-aftab-khan-cardiologist?practice_id=741280&specialization=Cardiologist&referrer=doctor_listing"
-    },
-    "Varicose veins": {
-        "name": "Dr. Nikhil Prasun",
-        "profile_link": "https://www.practo.com/kolkata/doctor/nikhil-prasun-neurologist?practice_id=735842&specialization=Neurologist&referrer=doctor_listing"
-    },
-    "Hypothyroidism": {
-        "name": "Dr. Shyama Prasad Roy",
-        "profile_link": "https://www.practo.com/kolkata/doctor/dr-shyama-prasad-roy-general-physician1?practice_id=702842&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
-    },
-    "Hyperthyroidism": {
-        "name": "Dr. Sandip Rungta",
-        "profile_link": "https://www.practo.com/kolkata/doctor/dr-sandip-rungta-cardiologist?practice_id=1180689&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
-    },
-    "Hypoglycemia": {
-        "name": "Dr. Saibal Moitra",
-        "profile_link": "https://www.practo.com/kolkata/doctor/dr-saibal-moitra-allergist-immunologist?practice_id=741280&specialization=General%20Physician&referrer=doctor_listing&utm_source=opd_google_Pmax"
-    },
-    "Osteoarthristis": {
-        "name": "Dr. Saumitra Sircar",
-        "profile_link": "https://www.practo.com/kolkata/doctor/saumitra-sircar-orthopedist?practice_id=1142246&specialization=Orthopedist&referrer=doctor_listing&utm_source=opd_google_dsa"
-    },
-    "Arthritis": {
-        "name": "Dr. Amitava Narayan Mukherjee",
-        "profile_link": "https://www.practo.com/kolkata/doctor/dr-amitava-narayan-mukherjee-orthopedist?practice_id=635703&specialization=Orthopedist&referrer=doctor_listing&utm_source=opd_google_dsa"
-    },
-    "(Vertigo) Paroxysmal Positional Vertigo": {
-        "name": "Dr. Subhankar Dey",
-        "profile_link": "https://www.practo.com/kolkata/doctor/subhankar-dey-ear-nose-throat-ent-specialist?practice_id=741280&specialization=Ear-Nose-Throat%20(ENT)%20Specialist&referrer=doctor_listing"
-    },
-    "Acne": {
-        "name": "Dr. Khushbu Tantia",
-        "profile_link": "https://www.practo.com/kolkata/doctor/dr-khushbu-tantia-dermatologist-1?practice_id=1347314&specialization=Dermatologist&referrer=doctor_listing"
-    },
-    "Urinary tract infection": {
-        "name": "Dr. Md. Mohsin",
-        "profile_link": "https://www.practo.com/kolkata/doctor/md-mohsin-1-nephrologist?practice_id=741280&specialization=Nephrologist&referrer=doctor_listing"
-    },
-    "Psoriasis": {
-        "name": "Dr. Debatri Datta",
-        "profile_link": "https://www.practo.com/kolkata/doctor/dr-debatri-datta-dermatologist?practice_id=1319383&specialization=Dermatologist&referrer=doctor_listing"
-    },
-    "Impetigo": {
-        "name": "Dr. Barnali Dutta",
-        "profile_link": "https://www.practo.com/kolkata/doctor/dr-barnali-dutta-dermatologist?practice_id=1277028&specialization=Dermatologist&referrer=doctor_listing"
-    }
-}
+# suggested doctors
+with open('data/doctors.json', 'r') as file:
+    suggested_doctors = json.load(file)
 
 # Variables to keep track of the conversation state
 waiting_for_symptoms = False
@@ -713,20 +381,25 @@ symptoms = []
 waiting_for_disease = False
 disease = []
 
-def disease_prediction(symptoms):
-    psymptoms = symptoms
-    l2 = [0] * len(l1)
+def disease_prediction_bot(symptoms):
+    try:
+        psymptoms = symptoms
+        l2 = [0] * len(l1)
 
-    for k in range(len(l1)):
-        for z in psymptoms:
-            if z == l1[k]:
-                l2[k] = 1
+        for k in range(len(l1)):
+            for z in psymptoms:
+                if z == l1[k]:
+                    l2[k] = 1
 
-    inputtest = [l2]
-    predicted = gnb.predict(inputtest)[0]
-    predicted_disease = diseases[predicted]
-    suggested_doctor = suggested_doctors.get(predicted_disease, "Doctor information not available")
-    return predicted_disease, suggested_doctor
+        inputtest = [l2]
+        predicted = gnb.predict(inputtest)[0]
+        predicted_disease = diseases[predicted]
+        suggested_doctor = suggested_doctors.get(predicted_disease, {"name": "Doctor information not available", "profile_link": ""})
+        return predicted_disease, suggested_doctor
+    
+    except Exception as e:
+        return "Error in prediction", {"name": str(e), "profile_link": ""}
+
 
 def get_bot_response(message):
     global waiting_for_symptoms, symptoms, waiting_for_disease, disease
@@ -747,7 +420,7 @@ def get_bot_response(message):
         if message == "done":
             if len(symptoms) == 0:
                 return "You haven't provided any symptoms. Please provide at least one symptom."
-            predicted_disease, suggested_doctor = disease_prediction(symptoms)
+            predicted_disease, suggested_doctor = disease_prediction_bot(symptoms)
             waiting_for_symptoms = False
             symptoms = []
             doctor_name = suggested_doctor.get('name', 'Doctor information not available')
