@@ -10,15 +10,15 @@ updateSlideshow();
 setInterval(updateSlideshow, 3000);
 
 // -------------------------------------PLANT IDENTIFICATION------------------------------------
-const images1 = ["static/image/E1.jpg", "static/image/E2.jpg", "static/image/E3.jpg", "static/image/E4.jpg", "static/image/E5.jpg"];
-const slideshowElement1 = document.getElementById("slideshow1");
-let currentIndex1 = 0;
-function updateSlideshow1() {
-    slideshowElement1.src = images1[currentIndex1];
-    currentIndex1 = (currentIndex1 + 1) % images1.length;
-}
-updateSlideshow1();
-setInterval(updateSlideshow1, 3000);
+// const images1 = ["static/image/E1.jpg", "static/image/E2.jpg", "static/image/E3.jpg", "static/image/E4.jpg", "static/image/E5.jpg"];
+// const slideshowElement1 = document.getElementById("slideshow1");
+// let currentIndex1 = 0;
+// function updateSlideshow1() {
+//     slideshowElement1.src = images1[currentIndex1];
+//     currentIndex1 = (currentIndex1 + 1) % images1.length;
+// }
+// updateSlideshow1();
+// setInterval(updateSlideshow1, 3000);
 
 // -------------------------------------Check Symptoms---------------------------
 const images2 = ["static/image/H1.jpg", "static/image/H2.jpg", "static/image/H3.jpg", "static/image/H4.jpg", "static/image/H5.jpg"];
