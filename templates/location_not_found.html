@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Location Not Found</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* Additional styling for the location not found page */
+        body {
+            background-color: #F0F3F4; /* Light gray background */
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+            color: #E74C3C; /* Red color for the heading */
+        }
+
+        p {
+            text-align: center;
+            color: #333;
+        }
+
+        a {
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            background-color: #3498DB; /* Blue color for buttons */
+            color: #FFFFFF;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin: 0 auto;
+            width: fit-content;
+        }
+
+        a:hover {
+            background-color: #2980B9; /* Darker blue color on hover */
+        }
+    </style>
+</head>
+<body>
+    <h1>Location Not Found</h1>
+    <p>The provided location could not be found. Please check the location and try again. Add your locality name.</p>
+    <a href="/search_donor">Try Again</a><br>
+    <a href="/">Back to Home</a>
+</body>
+</html>
