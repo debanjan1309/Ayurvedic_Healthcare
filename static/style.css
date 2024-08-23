@@ -1,0 +1,273 @@
+/* Reset some default styles */
+body, h1, h2, p, form, label, input, button {
+    margin: 0;
+    padding: 0;
+}
+
+/* Global styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0.5)), url('static/image/med1.jpg');
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center center;
+    overflow-y: visible;
+    transition: background-color 0.3s ease;
+}
+
+/* Slideshow styles */
+.slideshow-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* Ensure it stays behind other content */
+    overflow: hidden;
+}
+
+.slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+/* Header styles */
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: background 0.3s ease;
+}
+
+.main-navigation ul {
+    list-style: none;
+    display: flex;
+}
+
+.main-navigation ul li {
+    margin-left: 20px;
+}
+
+.main-navigation ul li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 600;
+    transition: color 0.3s;
+}
+
+.main-navigation ul li a:hover {
+    color: #007bff;
+}
+
+/* Hero section */
+.hero {
+    text-align: center;
+    padding: 150px 20px;
+    color: #fff;
+    position: relative;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+}
+
+.hero h1 {
+    font-size: 48px;
+    margin-bottom: 10px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.hero p {
+    font-size: 24px;
+    margin-bottom: 0;
+}
+
+/* About section */
+.about {
+    text-align: center;
+    padding: 20px 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #333;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+    margin: 20px auto;
+    max-width: 800px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.about:hover {
+    background-color: rgba(255, 255, 255, 1);
+    transform: scale(1.02);
+}
+
+.about-toggle {
+    font-size: 32px;
+    cursor: pointer;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.about-toggle i {
+    margin-left: 10px;
+    transition: transform 0.3s;
+}
+
+.about-content {
+    display: none;
+    padding: 20px;
+    font-size: 18px;
+    line-height: 1.6;
+    transition: opacity 0.3s ease;
+}
+
+/* Show the content when the toggle is active */
+.about.active .about-content {
+    display: block;
+    opacity: 1;
+}
+
+.about.active .about-toggle i {
+    transform: rotate(180deg);
+}
+
+/* Team section */
+.team {
+    text-align: center;
+    padding: 60px 20px;
+    background-color: #fff;
+}
+
+.team h2 {
+    font-size: 36px;
+    margin-bottom: 40px;
+    color: #007bff;
+}
+
+.team-members {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 40px;
+    margin: 0 auto; /* Center the team members container */
+    max-width: 1200px; /* Optional: Limit the maximum width */
+}
+
+.team-member {
+    flex: 1 1 200px; /* Allow items to grow and shrink */
+    text-align: center;
+    margin: 20px; /* Adjust spacing between team members */
+    position: relative; /* To position info box absolutely */
+}
+
+.team-member img {
+    border-radius: 50%;
+    width: 150px; /* Fixed size to ensure consistency */
+    height: 150px; /* Ensure the height matches the width */
+    object-fit: cover; /* Ensure the image covers the area without distortion */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.team-member img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.team-member h3 {
+    margin-top: 15px;
+    font-size: 20px;
+    color: #333;
+}
+
+.team-member p {
+    font-size: 16px;
+    color: #666;
+}
+
+/* Team member info box */
+.team-member-info {
+    position: absolute;
+    bottom: -50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    padding: 10px;
+    background: #fff; /* White background */
+    color: #333; /* Dark text color for contrast */
+    border-radius: 5px;
+    opacity: 0;
+    visibility: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for depth */
+    transition: opacity 0.3s, visibility 0.3s;
+}
+
+.team-member:hover .team-member-info {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Mission, values, and contact sections */
+.mission, .values, .contact {
+    text-align: center;
+    padding: 60px 20px;
+    background-color: #f7f7f7;
+}
+
+.mission h2, .values h2, .contact h2 {
+    font-size: 32px;
+    margin-bottom: 20px;
+    color: #007bff;
+}
+
+.values ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+.values ul li {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+/* Footer */
+footer {
+    background-color: #333;
+    color: #fff;
+    padding: 40px 20px;
+}
+
+.footer-social ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.footer-social ul li {
+    margin: 0 10px;
+}
+
+.footer-social ul li a {
+    color: #fff;
+    font-size: 24px;
+    transition: color 0.3s;
+}
+
+.footer-social ul li a:hover {
+    color: #007bff;
+}
+
+.footer-bottom {
+    margin-top: 20px;
+    text-align: center;
+}
