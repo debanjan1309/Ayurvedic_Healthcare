@@ -519,6 +519,6 @@ def chat():
 def about():
     return render_template('about.html')
 
-if _name_ == '_main_':
+if __name__ == '__main__':
     read_data_from_csv()
     app.run(debug=True)
