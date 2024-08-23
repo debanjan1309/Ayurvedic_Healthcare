@@ -16,7 +16,7 @@ import csv
 import math
 from geopy.geocoders import Nominatim
 
-app = Flask(__name__)
+app = Flask(_name_)
 # model = tf.keras.models.load_model("model\\plant_identification_model2.h5")
 # main_data_dir = "static\\image\\Leaf Images"
 
@@ -335,7 +335,7 @@ def haversine(lat1, lon1, lat2, lon2):
     dlon = lon2 - lon1
     dlat = lat2 - lat1
 
-    a = math.sin(dlat / 2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon / 2)**2
+    a = math.sin(dlat / 2)*2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon / 2)*2
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
 
     distance = R * c
@@ -519,6 +519,6 @@ def chat():
 def about():
     return render_template('about.html')
 
-if __name__ == '__main__':
+if _name_ == '_main_':
     read_data_from_csv()
     app.run(debug=True)
