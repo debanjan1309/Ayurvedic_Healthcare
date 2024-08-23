@@ -16,7 +16,7 @@ import csv
 import math
 from geopy.geocoders import Nominatim
 
-app = Flask(_name_)
+app = Flask(__name__)
 # model = tf.keras.models.load_model("model\\plant_identification_model2.h5")
 # main_data_dir = "static\\image\\Leaf Images"
 
