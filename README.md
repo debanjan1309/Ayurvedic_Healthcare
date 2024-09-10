@@ -1,1 +1,0 @@
-# Ayurvedic_Healthcare
