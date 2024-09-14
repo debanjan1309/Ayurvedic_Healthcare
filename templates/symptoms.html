@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disease Symptoms</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            /* background-color: #f5f5f5; */
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin: 0;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        h2 {
+            font-size: 20px;
+            margin-top: 0;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        
+
+
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .button-container a {
+            text-decoration: none;
+            background-color: #3498DB; /* Blue color for buttons */
+            color: #FFFFFF;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin: 0 10px;
+            width: 10%; /* Adjust the width to your preference */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .button-container a:hover {
+            background-color: #2980B9; /* Darker blue color on hover */
+        }
+
+        /* header {
+            display: flex;
+            align-items: left;
+            padding: 10px 20px;
+        } */
+
+        .logo {
+            margin-right: auto;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <a href="/">
+                    <img src="static/image/icon1.png" alt="Your Logo">
+                </a>
+            </div>
+            <nav class="main-navigation">
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/symptoms">Check Symptoms</a></li>
+                    <li><a href="/disease">Check Disease</a></li>
+                    <li><a href="/bloodbank">Check Bloodbank</a></li>
+                    <li><a href="/about">About Us</a></li>
+            </ul>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <h2>Search for Disease Symptoms</h2>
+        <form method="POST" action="/symptoms">
+            <label for="disease">Enter Disease Name:</label>
+            <input type="text" id="disease" name="disease" required>
+            <div id="suggestions-container"></div> <!-- Container for suggestions -->
+
+            <button type="submit">Search</button>
+        </form>
+
+        {% if symptoms %}
+            <h2>Symptoms:</h2>
+            <ul>
+                {% for symptom in symptoms %}
+                    <li>{{ symptom }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </main>
+    <h5>.</h5>
+    <h5>.</h5>
+    <h5>.</h5>
+    <h5>.</h5>
+    
+    <script>
+        const diseaseInput = document.getElementById('disease');
+        const suggestionsContainer = document.getElementById('suggestions-container');
+    
+        // Function to fetch and display suggestions
+        async function fetchSuggestions() {
+            const inputValue = diseaseInput.value.trim();
+    
+            if (inputValue.length >= 2) {
+                // Make an AJAX request to your server to fetch suggestions
+                const response = await fetch(`/get_suggestions?query=${inputValue}`);
+                const data = await response.json();
+    
+                // Display suggestions in the container
+                suggestionsContainer.innerHTML = '';
+                data.forEach((suggestion) => {
+                    const suggestionItem = document.createElement('div');
+                    suggestionItem.textContent = suggestion;
+                    suggestionItem.classList.add('suggestion-item');
+    
+                    suggestionItem.addEventListener('click', () => {
+                        diseaseInput.value = suggestion;
+                        suggestionsContainer.innerHTML = ''; // Clear suggestions on click
+                    });
+    
+                    suggestionsContainer.appendChild(suggestionItem);
+                });
+            } else {
+                suggestionsContainer.innerHTML = ''; // Clear suggestions if input length < 2
+            }
+        }
+    
+        diseaseInput.addEventListener('input', fetchSuggestions);
+    </script>
+    
+</body>
+<footer>
+    <div class="footer-content">
+        <div class="footer-links">
+            <ul>
+                <a href="/">Home</a>
+                <a href="/symptoms">Check Symptoms</a>
+                <a href="/disease">Check Disease</a>
+                <a href="/bloodbank">Check Bloodbank</a>
+                <a href="/about">About Us</a>
+            </ul>
+        </div>
+        <div class="footer-social">
+            <ul>
+                <li><a href="https://www.facebook.com/debanjan.das.10690203?mibextid=ZbWKwL"><i class="fab fa-facebook"></i></a></li>
+                <li><a href="https://twitter.com/DEBANJANDA53702"><i class="fab fa-twitter"></i></a></li>
+                <li><a href="https://www.instagram.com/debanjan_9935"><i class="fab fa-instagram"></i></a></li>
+                <li><a href="https://www.linkedin.com/in/debanjan-das-0b49a921b"><i class="fab fa-linkedin"></i></a></li>
+                <li><a href="https://github.com/debanjan1309"><i class="fab fa-github"></i></a></li>
+            </ul>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 HC. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Ayurveda</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="static/style2.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='1.css') }}">
+    <!-- <link rel="stylesheet" type="text/css" href="static/style.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <a href="/">
+                    <img src="static/image/icon1.png" alt="Your Logo">
+                </a>
+            </div>
+            <div id="greeting"></div>
+            <nav class="main-navigation">
+                <ul>
+                    <li><a href="/disease">Check Disease</a></li>
+                    <li><a href="/symptoms">Check Symptoms</a></li>
+                    <li><a href="/bloodbank">Check Bloodbank</a></li>
+                    <li><a href="/log">Log In</a></li>
+                    <li><a href="/about">About Us</a></li>
+            </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- -------------------------------------Chatbot------------------------------------- -->
+
+    <div id="chatbot-icon">
+        <img src="{{ url_for('static', filename='chat-icon.png') }}" alt="Chatbot Icon" />
+    </div>
+    <div id="chatbot-container">
+        <div id="chatbot-header">
+            <span>Chatbot</span>
+            <button id="close-chatbot">&times;</button>
+        </div>
+        <div id="chat-log"></div>
+        <form id="chat-form">
+            <input type="text" id="user-input" placeholder="Type a message..." required>
+            <button type="submit">Send</button>
+        </form>
+    </div>
+
+    <!-- -------------------------------------AYURVEDA------------------------------------ -->
+    <div class="container">
+        <div class="image-container">
+            <img id="slideshow" src="" alt="Image 1">
+        </div>
+        <div class="text-container">
+            <h1>Welcome to The World of Ayurveda</h1>
+            <br>
+            <p>
+                Ayurveda, the ancient 'Science of Life' from India, harmonizes the mind, body, and spirit. It identifies individual doshas (Vata, Pitta, and Kapha) to achieve balance through natural remedies, diet, yoga, and meditation. This holistic approach not only addresses symptoms but also their underlying causes. Ayurveda's global popularity stems from its personalized, preventive care philosophy, offering a path to long-lasting well-being and inner harmony.
+                With its roots deeply intertwined with nature, Ayurveda encourages us to connect with the rhythms of the natural world and tap into our body's innate healing wisdom. By embracing these principles, individuals can unlock a journey of self-discovery, health, and vitality that transcends time and borders.
+            </p>
+        </div>
+    </div>
+
+    <!-- -------------------------------------PLANT IDENTIFICATION--------------------------- -->
+    <div class="container">
+        <div class="text-container">
+            <h1>Plant Indentification</h1>
+            <br>
+            <p>
+                Discover and identify plants effortlessly with our website, merging Ayurvedic wisdom and cutting-edge technology. Upload a plant image, and our platform provides instant identification results, fostering a deeper connection with nature's healing properties. Explore the plant kingdom like never before with 'Plant Identification with Ayurveda'.
+            </p>
+            <br>
+            <h3>Upload an Image</h3>
+            <form method="POST" action="/upload" enctype="multipart/form-data">
+                <div class="file-upload">
+                    <label for="image-upload" class="file-label">
+                        <i class="fas fa-upload"></i> Drag &amp; Drop or Click to Upload
+                    </label>
+                    <input type="file" id="image-upload" name="image" accept="image/*">
+                    <button type="submit" id="predict-button">Upload and Predict</button>
+                </div>
+            </form>
+        </div>
+        <div class="image-container">
+            <img id="slideshow1" src="" alt="Image 10">
+        </div>
+    </div>
+
+    <!-- -------------------------------------Check Symptoms--------------------------- -->
+    <div class="container">
+        <div class="text-container">
+            <h1>Symptom Checker</h1>
+            <br>
+            <p>
+                Welcome to our Ayurveda Health Checker! Our website empowers you to explore the world of Ayurveda, where ancient wisdom meets modern technology. Have you ever wondered about the symptoms of a specific disease? With our user-friendly interface, you can simply enter the name of a disease, and we'll provide you with a comprehensive list of possible symptoms associated with it. Our goal is to offer valuable insights into your health, bridging the gap between traditional Ayurvedic knowledge and contemporary healthcare needs. Discover the holistic approach of Ayurveda, where mind, body, and spirit harmonize for your well-being. Explore, learn, and take control of your health journey with Ayurveda!
+            </p>
+            <br>
+            <button onclick="location.href='/symptoms';">
+                Click Here
+            </button>
+        </div>
+        <div class="image-container">
+            <img id="slideshow2" src="" alt="Image 1">
+        </div>
+    </div>
+
+        <!-- -------------------------------------Check Disease--------------------------- -->
+        <div class="container">
+            <div class="image-container">
+                <img id="slideshow3" src="" alt="Image 1">
+            </div>
+            <div class="text-container">
+                <h1>Disease Checker</h1>
+                <br>
+                <p>
+                    Welcome to our Ayurvedic Health Assistant! Our website empowers you to take charge of your well-being by allowing you to input five major symptoms you're experiencing. With just a few clicks, our intelligent system will analyze your symptoms and provide you with a list of potential diseases associated with them. Not only that, but we'll also recommend a qualified doctor for further consultation and suggest Ayurvedic remedies tailored to your specific condition. Take the first step towards a healthier you – input your symptoms and embark on a holistic journey to wellness with Ayurveda!
+                </p>
+                <br>
+                <button onclick="location.href='/disease';">
+                    Click Here
+                </button>
+            </div>
+        </div>
+
+        <!-- -------------------------------------Check Bloodbank--------------------------- -->
+        <div class="container">
+            <div class="text-container">
+                <h1>Bloodbank Locator</h1>
+                <br>
+                <p>
+                    Welcome to our Blood Bank Locator! Our platform simplifies the process of finding the right blood type in your area. By providing us with your needed blood type and current location, we'll swiftly connect you with the nearest blood bank that has the required blood type in stock. Our mission is to ensure that vital blood resources are accessible when you need them most, promoting a healthier and safer community. Take a step towards seamless blood donation and transfusion – share your blood type and location, and let us help you connect with the nearest blood bank. Your well-being is our priority!
+                </p>
+                <br>
+                <button onclick="location.href='/bloodbank';">
+                    Click Here
+                </button>
+            </div>
+            <div class="image-container">
+                <img id="slideshow4" src="" alt="Image 1">
+            </div>
+        </div>
+    <script src="static/slideshow.js"></script>
+    <script>
+        document.getElementById('image-upload').addEventListener('change', function () {
+            const fileInput = document.getElementById('image-upload');
+            const label = document.querySelector('.file-label');
+            if (fileInput.files.length > 0) {
+                label.textContent = fileInput.files[0].name;
+            } else {
+                label.textContent = 'Drag & Drop or Click to Upload';
+            }
+        });
+        
+        // Add drag-and-drop event listeners
+        const fileUploadContainer = document.querySelector('.file-upload');
+        fileUploadContainer.addEventListener('dragover', function (e) {
+            e.preventDefault();
+            fileUploadContainer.classList.add('dragover');
+        });
+        
+        fileUploadContainer.addEventListener('dragleave', function () {
+            fileUploadContainer.classList.remove('dragover');
+        });
+        
+        fileUploadContainer.addEventListener('drop', function (e) {
+            e.preventDefault();
+            fileUploadContainer.classList.remove('dragover');
+            
+            const fileInput = document.getElementById('image-upload');
+            fileInput.files = e.dataTransfer.files;
+        
+            const label = document.querySelector('.file-label');
+            label.textContent = fileInput.files[0].name;
+        });
+        
+        document.getElementById('predict-button').addEventListener('click', function () {
+            const fileInput = document.getElementById('image-upload');
+            if (fileInput.files.length === 0) {
+                alert('Please select an image to upload.');
+            }
+        });
+        </script>
+        <script src="{{ url_for('static', filename='chatbot.js') }}"></script>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-social">
+                <ul>
+                    <li><a href="https://www.facebook.com/debanjan.das.10690203?mibextid=ZbWKwL"><i class="fab fa-facebook"></i></a></li>
+                    <li><a href="https://twitter.com/DEBANJANDA53702"><i class="fab fa-twitter"></i></a></li>
+                    <li><a href="https://www.instagram.com/debanjan_9935"><i class="fab fa-instagram"></i></a></li>
+                    <li><a href="https://www.linkedin.com/in/debanjan-das-0b49a921b"><i class="fab fa-linkedin"></i></a></li>
+                    <li><a href="https://github.com/debanjan1309"><i class="fab fa-github"></i></a></li>
+                </ul>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 HC. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
+

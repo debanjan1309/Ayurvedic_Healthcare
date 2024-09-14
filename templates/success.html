@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Donor Added Successfully</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* Additional styling for the success page */
+        body {
+            background-color: #F0F3F4; /* Light gray background */
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+            color: #27AE60; /* Green color for the heading */
+            padding-top: 10px;
+        }
+
+        p {
+            text-align: center;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .button-container a {
+            text-decoration: none;
+            background-color: #3498DB; /* Blue color for buttons */
+            color: #FFFFFF;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin: 0 10px;
+        }
+
+        .button-container a:hover {
+            background-color: #2980B9; /* Darker blue color on hover */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <a href="/">
+                    <img src="static/image/icon1.png" alt="Your Logo">
+                </a>
+            </div>
+            <nav class="main-navigation">
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/symptoms">Check Symptoms</a></li>
+                    <li><a href="/disease">Check Disease</a></li>
+                    <li><a href="/bloodbank">Check Bloodbank</a></li>
+                    <li><a href="/about">About Us</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <h1>Donor Added Successfully</h1>
+    <p>Thank you for adding the donor information.</p>
+    <div class="button-container">
+        <a href="/add_donor">Add Another Donor</a>
+    </div>
+    
+    <h5>.</h5>
+    <h5>.</h5>
+    <h5>.</h5>
+    <h5>.</h5>
+</body>
+<footer>
+    <div class="footer-content">
+        <div class="footer-links">
+            <ul>
+                <a href="/">Home</a>
+                <a href="/symptoms">Check Symptoms</a>
+                <a href="/disease">Check Disease</a>
+                <a href="/bloodbank">Check Bloodbank</a>
+                <a href="/about">About Us</a>
+            </ul>
+        </div>
+        <div class="footer-social">
+            <ul>
+                <li><a href="https://www.facebook.com/debanjan.das.10690203?mibextid=ZbWKwL"><i class="fab fa-facebook"></i></a></li>
+                <li><a href="https://twitter.com/DEBANJANDA53702"><i class="fab fa-twitter"></i></a></li>
+                <li><a href="https://www.instagram.com/debanjan_9935"><i class="fab fa-instagram"></i></a></li>
+                <li><a href="https://www.linkedin.com/in/debanjan-das-0b49a921b"><i class="fab fa-linkedin"></i></a></li>
+                <li><a href="https://github.com/debanjan1309"><i class="fab fa-github"></i></a></li>
+            </ul>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 HC. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+</html>
