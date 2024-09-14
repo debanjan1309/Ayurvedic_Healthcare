@@ -9,6 +9,36 @@
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css"
     />
+    <style>
+        .team-member {
+            position: relative;
+            display: inline-block;
+            margin: 60px;
+            text-align: center;
+        }
+
+        .team-member-info {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            padding: 10px;
+            background: #fff; /* White background */
+            color: #333; /* Dark text color for contrast */
+            border-radius: 5px;
+            opacity: 0;
+            visibility: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for depth */
+            transition: opacity 0.3s, visibility 0.3s, top 0.3s;
+        }
+
+        .team-member:hover .team-member-info {
+            opacity: 1;
+            visibility: visible;
+            top: calc(100% + 10px); /* Adjust this value for spacing between the image and the info box */
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -40,27 +70,40 @@
 
     <section class="team">
         <h2>Our Team</h2>
-        <div class="team-member">
-            <img src="static/image/Asmita.jpg" alt="Team Member 4">
-            <h3>Asmita Dey</h3>
-            <p>Developer</p>
+        <div class="team-members">
+            <div class="team-member">
+                <img src="static/image/Asmita.jpg" alt="Asmita Dey">
+                <h3>Asmita Dey</h3>
+                <p>Developer</p>
+                <div class="team-member-info">
+                    <p>Asmita is known for his innovative solutions and problem-solving skills in both frontend and backend development.</p>
+                </div>
+            </div>
+            <div class="team-member">
+                <img src="static/image/D1.jpg" alt="Debanjan Das">
+                <h3>Debanjan Das</h3>
+                <p>Developer</p>
+                <div class="team-member-info">
+                    <p>Debanjan specializes in backend development and has extensive experience in managing databases and server-side logic.</p>
+                </div>
+            </div>
+            <div class="team-member">
+                <img src="static/image/Sunandan.jpg" alt="Sunandan Bose">
+                <h3>Sunandan Bose</h3>
+                <p>Developer</p>
+                <div class="team-member-info">
+                    <p>Sunandan specializes in frontend development with a passion for creating user-friendly interfaces and enhancing user experiences.</p>
+                </div>
+            </div>
+            <div class="team-member">
+                <img src="static/image/Tiyasha.jpg" alt="Tiyasha Banik">
+                <h3>Tiyasha Banik</h3>
+                <p>Developer</p>
+                <div class="team-member-info">
+                    <p>Tiyasha focuses on creating engaging user interfaces and ensuring a smooth and intuitive user experience.</p>
+                </div>
+            </div>
         </div>
-        <div class="team-member">
-            <img src="static/image/D1.jpg" alt="Team Member 1">
-            <h3>Debanjan Das</h3>
-            <p>Developer</p>
-        </div>
-        <div class="team-member">
-            <img src="static/image/Sunandan.jpg" alt="Team Member 2">
-            <h3>Sunandan Bose</h3>
-            <p>Developer</p>
-        </div>
-        <div class="team-member">
-            <img src="static/image/Tiyasha.jpg" alt="Team Member 3">
-            <h3>Tiyasha Banik</h3>
-            <p>Developer</p>
-        </div>
-        <!-- Add more team members as needed -->
     </section>
 
     <section class="mission">
