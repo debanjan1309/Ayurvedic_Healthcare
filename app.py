@@ -17,7 +17,7 @@ import math
 from geopy.geocoders import Nominatim
 
 app = Flask(__name__)
-model = tf.keras.models.load_model("model/plant_identification_model2.keras")
+model = tf.keras.models.load_model("plant_identification_model2.keras")
 main_data_dir = "static/image/Leaf Images"
 
 # Create label mapping based on subdirectory names
